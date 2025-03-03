@@ -1,0 +1,24 @@
+# In case the compilations fail, the following patch can be applied:
+# patch -p1 < fix_optional_pragmas.patch
+diff --git a/lib/cbmc/src/util/optional.h b/lib/cbmc/src/util/optional.h
+index original..modified 100644
+--- a/lib/cbmc/src/util/optional.h
++++ b/lib/cbmc/src/util/optional.h
+@@ -12,11 +12,13 @@ Author: Diffblue Ltd.
+ #define CPROVER_UTIL_OPTIONAL_H
+ 
+ #if defined __clang__
+-  #pragma clang diagnostic push ignore "-Wall"
+-  #pragma clang diagnostic push ignore "-Wpedantic"
++  #pragma clang diagnostic push
++  #pragma clang diagnostic ignored "-Wall"
++  #pragma clang diagnostic ignored "-Wpedantic"
+ #elif defined __GNUC__
+-  #pragma GCC diagnostic push ignore "-Wall"
+-  #pragma GCC diagnostic push ignore "-Wpedantic"
++  #pragma GCC diagnostic push
++  #pragma GCC diagnostic ignored "-Wall"
++  #pragma GCC diagnostic ignored "-Wpedantic"
+ #elif defined _MSC_VER
+   #pragma warning(push)
+ #endif
