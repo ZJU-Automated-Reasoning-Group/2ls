@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canary</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/monokai.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/eclipse.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Canary</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <span class="navbar-text text-light">
+                    ZJU Programming Languages and Automated Reasoning Group
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Left Panel: Code Editor & Example Selector -->
+            <div class="col-md-7">
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Code Editor</h5>
+                        <div>
+                            <select id="theme-selector" class="form-select form-select-sm">
+                                <option value="default">Default Theme</option>
+                                <option value="monokai">Monokai</option>
+                                <option value="eclipse">Eclipse</option>
+                                <option value="dracula">Dracula</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="code-editor"></div>
+                    </div>
+                </div>
+                
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Example Programs</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <select id="example-selector" class="form-select">
+                                <option value="">-- Select an Example --</option>
+                                <option value="buffer-overflow">Buffer Overflow</option>
+                                <option value="memory-leak">Memory Leak</option>
+                                <option value="null-pointer">Null Pointer Dereference</option>
+                                <option value="use-after-free">Use After Free</option>
+                                <option value="integer-overflow">Integer Overflow</option>
+                                <option value="division-by-zero">Division by Zero</option>
+                                <option value="double-free">Double Free</option>
+                            </select>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button id="load-example-btn" class="btn btn-primary">Load Example</button>
+                            <input type="file" id="file-upload" style="display: none;">
+                            <button id="upload-file-btn" class="btn btn-secondary">Upload File</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Panel: Options & Results -->
+            <div class="col-md-5">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Analysis Options</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted">Checks</h6>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="bounds-check" checked>
+                            <label class="form-check-label" for="bounds-check">
+                                Bounds Check
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="pointer-check" checked>
+                            <label class="form-check-label" for="pointer-check">
+                                Pointer Check
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="memory-leak-check" checked>
+                            <label class="form-check-label" for="memory-leak-check">
+                                Memory Leak Check
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="div-by-zero-check" checked>
+                            <label class="form-check-label" for="div-by-zero-check">
+                                Division by Zero Check
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="signed-overflow-check">
+                            <label class="form-check-label" for="signed-overflow-check">
+                                Signed Overflow Check
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="unsigned-overflow-check">
+                            <label class="form-check-label" for="unsigned-overflow-check">
+                                Unsigned Overflow Check
+                            </label>
+                        </div>
+                        
+                        <h6 class="card-subtitle mb-2 text-muted mt-4">Analysis Techniques</h6>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="intervals" checked>
+                            <label class="form-check-label" for="intervals">
+                                Intervals
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="k-induction">
+                            <label class="form-check-label" for="k-induction">
+                                k-Induction
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="termination">
+                            <label class="form-check-label" for="termination">
+                                Termination
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="heap">
+                            <label class="form-check-label" for="heap">
+                                Heap
+                            </label>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <button id="analyze-btn" class="btn btn-success w-100">Analyze</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Results</h5>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="raw-output-toggle">
+                            <label class="form-check-label" for="raw-output-toggle">Raw Output</label>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="results-panel">
+                            <div id="formatted-results">
+                                <p class="text-muted">Results will appear here after analysis.</p>
+                            </div>
+                            <div id="raw-output" style="display: none;">
+                                <pre class="text-muted">Raw output will appear here after analysis.</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/matchbrackets.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html> 

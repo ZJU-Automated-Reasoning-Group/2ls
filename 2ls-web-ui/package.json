@@ -1,0 +1,35 @@
+{
+  "name": "2ls-web-ui",
+  "version": "1.0.0",
+  "description": "Web UI for 2LS static analyzer",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js",
+    "build": "webpack --mode production",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-codemirror2": "^7.2.1",
+    "codemirror": "^5.65.13",
+    "bootstrap": "^5.3.2",
+    "multer": "^1.4.5-lts.1",
+    "temp": "^0.9.4",
+    "child_process": "^1.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.9",
+    "@babel/preset-env": "^7.22.9",
+    "@babel/preset-react": "^7.22.5",
+    "babel-loader": "^9.1.3",
+    "css-loader": "^6.8.1",
+    "html-webpack-plugin": "^5.5.3",
+    "nodemon": "^3.0.1",
+    "style-loader": "^3.3.3",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
+  }
+} 
